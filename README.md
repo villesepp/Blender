@@ -9,7 +9,7 @@ Open and run in the Blender Script Editor. A panel will appear in the 3D viewpor
 ### Use
 Click the Generate Procedural Terrain button and tweak the values using the box that appears on the bottom right.
 
-## Features
+### Features
 - Plane size
 - Subdivisions (cuts)
 - Noise Scale
@@ -38,7 +38,7 @@ It will export everything in the current collection and the collection itself. T
 - Run the script to get a file "level_01.json"
 - Read the file in your game engine and generate the level graphics using the coordinates from the JSON file
 
-## Exports
+### Exports
 - X, Y, Z coordinate (.1 precision)
 - Object's Custom Properties
 - (ignores 'cycles' and 'booleans' properties that are enabled by default)
