@@ -1,6 +1,7 @@
 bl_info = {
     "name": "Procedural Terrain Generator",
-    "author": "Your Name",
+    "author": "Ville Seppänen",
+    "wiki_url": "https://github.com/villesepp/Blender",
     "version": (1, 0),
     "blender": (4, 3, 2),
     "location": "View3D > Sidebar > TerrainGen",
