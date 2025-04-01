@@ -29,7 +29,14 @@ Export some object properties to a JSON file. Useful if you want to use Blender 
 Open and run in the Blender Script Editor.
 
 ### Use
-It will export everything in the current collection and the collection itself. There is currently no UI, due to the lack of a need for it. A JSON file will be generated in the same folder as the blender project file.
+It will export everything in the current collection and the collection itself. There is currently no UI yet, due to the lack of a need for it. A JSON file with the same name as the collection will be generated in the same folder as the blender project file.
+
+### Usage example case as a level editor tool
+- Create a collection "level_01"
+- Add some objects, such as terrain pieces, with proper names like "ground" or "water"
+- Add custom properties to e.g. a "water" object, like depth: 5, for deep water
+- Run the script to get a file "level_01.json"
+- Read the file in your game engine and generate the level graphics using the coordinates from the JSON file
 
 ## Exports
 - X, Y, Z coordinate (.1 precision)
