@@ -10,18 +10,28 @@ bl_info = {
 }
 
 import bpy
+import bmesh
 from bpy.props import FloatProperty, IntProperty
 from mathutils import noise, Vector
 import math
 import random
 
-class TerrainSettings(bpy.types.PropertyGroup):
-    size: FloatProperty(name="Plane Size", default=20.0, min=1.0)
-    cuts: IntProperty(name="Subdivisions", default=20, min=1, max=300)
-    scale: FloatProperty(name="Noise Scale", default=0.3, min=0.01, max=0.5)
-    height: FloatProperty(name="Height Multiplier", default=2.0, min=0.1)
-    seed: IntProperty(name="Seed Offset", default=0)
+def create_subdivided_plane(name="Plane", size=2, cuts=4):
+        # Create a new mesh and object
+        mesh = bpy.data.meshes.new(name)
+        obj = bpy.data.objects.new(name, mesh)
+        bpy.context.collection.objects.link(obj)
 
+        # Create bmesh and generate a plane
+        bm = bmesh.new()
+        bmesh.ops.create_grid(bm, x_segments=cuts + 1, y_segments=cuts + 1, size=size / 2)
+
+        # Write the bmesh into the mesh
+        bm.to_mesh(mesh)
+        bm.free()
+
+        return obj
+    
 class TerrainGeneratorPanel(bpy.types.Panel):
     bl_label = "Terrain Generator"
     bl_idname = "VIEW3D_PT_terrain_generator"
@@ -33,17 +43,19 @@ class TerrainGeneratorPanel(bpy.types.Panel):
         layout = self.layout
         layout.operator("mesh.generate_terrain")
 
-
 class TerrainGeneratorOperator(bpy.types.Operator):
     bl_idname = "mesh.generate_terrain"
-    bl_label = "Generate Procedural Terrain"
+    bl_label = "Generate"
     bl_options = {'REGISTER', 'UNDO'}
 
-    size: FloatProperty(name="Plane Size", default=20.0, min=1.0)
-    cuts: IntProperty(name="Subdivisions", default=20, min=1, max=200)
-    scale: FloatProperty(name="Noise Scale", default=0.3, min=0.01, max=0.5)
-    height: FloatProperty(name="Height Multiplier", default=2.0, min=0.1)
-    seed: IntProperty(name="Seed Offset", default=0)
+    size: FloatProperty(name="Size", default=20.0, min=1.0)
+    cuts: IntProperty(name="Subdivisions", default=50, min=1, max=200)
+    seed: IntProperty(name="Seed", default=0)
+    low_limit: FloatProperty(name="Low Limit", default=-1.0)
+    scale: FloatProperty(name="Scale | Noise", default=0.25, min=0.01, max=0.5)
+    height: FloatProperty(name="Height | Noise", default=2.0, min=0.1)
+    minor_scale: FloatProperty(name="Scale | Min. Noise", default=1.0, min=0.01, max=5.0)
+    minor_height: FloatProperty(name="Height | Min. Noise", default=1.0, min=0.0)
     use_vertex_colors: bpy.props.BoolProperty(
         name="Use Vertex Colors",
         description="Apply grayscale vertex colors based on terrain height",
@@ -54,28 +66,45 @@ class TerrainGeneratorOperator(bpy.types.Operator):
         description="Use smooth shading",
         default=True
     )
-
+    
     def execute(self, context):
         # Use operator properties directly for redo panel
         size = self.size
         cuts = self.cuts
+        seed = self.seed
+        low_limit = self.low_limit
         scale = self.scale
         height = self.height
-        seed = self.seed
+        minor_scale = self.minor_scale
+        minor_height = self.minor_height
 
-        # Terrain generation logic
-        bpy.ops.mesh.primitive_plane_add(size=size, enter_editmode=True)
-        bpy.ops.mesh.subdivide(number_cuts=cuts)
-        bpy.ops.object.editmode_toggle()
-
-        obj = bpy.context.active_object
+        obj = create_subdivided_plane(size=size, cuts=cuts)
         mesh = obj.data
 
         seed = Vector((seed, seed, 0))
 
+        # translate vertices
         for v in mesh.vertices:
-            pos = Vector((v.co.x * scale, v.co.y * scale, 0)) + seed
-            v.co.z = noise.noise(pos) * height
+            pos = Vector((
+                v.co.x * scale,
+                v.co.y * scale,
+                0
+                )) + seed
+            v.co.z += noise.noise(pos) * height
+        
+        # minor translate
+        for v in mesh.vertices:
+            pos = Vector((
+                v.co.x * minor_scale,
+                v.co.y * minor_scale,
+                0
+                )) + seed
+            v.co.z += noise.noise(pos) * (v.co.z * minor_height)
+            
+        # z low-limit
+        for v in mesh.vertices:
+            if v.co.z < low_limit:
+                v.co.z = low_limit
 
         # Set smooth shading
         if self.use_smooth_shading:
@@ -84,7 +113,6 @@ class TerrainGeneratorOperator(bpy.types.Operator):
         else:
             for poly in mesh.polygons:
                 poly.use_smooth = False
-
 
         # Apply vertex colors
         if self.use_vertex_colors:
@@ -107,16 +135,11 @@ class TerrainGeneratorOperator(bpy.types.Operator):
         return {'FINISHED'}
 
 def register():
-    bpy.utils.register_class(TerrainSettings)
-    bpy.types.Scene.terrain_settings = bpy.props.PointerProperty(type=TerrainSettings)
-
     bpy.utils.register_class(TerrainGeneratorOperator)
     bpy.utils.register_class(TerrainGeneratorPanel)
 
 
 def unregister():
-    del bpy.types.Scene.terrain_settings
-
     bpy.utils.unregister_class(TerrainGeneratorPanel)
     bpy.utils.unregister_class(TerrainGeneratorOperator)
     bpy.utils.unregister_class(TerrainSettings)
