@@ -10,7 +10,7 @@ Open and run in the Blender Script Editor. A panel will appear in the 3D viewpor
 Click the Generate button and tweak the values using the box that appears on the bottom right.
 
 ### Key Features
-- Size and scale
+- Adjustable size, height, subdivisions (level of detail), seed
 - Two noise generators: Base and peak/valley
 - Low limit for e.g. bodies of water
 - Height-based vertex colors generation
