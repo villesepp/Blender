@@ -1,7 +1,7 @@
 My Blender 3D scripts
 
 # ⛰️ Terrain Generator
-Simple procedural tool for making bumpy planes with options for customization.
+Simple procedural tool for making bumpy planes with options for customization. Developed in Blender 4.3.2.
 
 ### Install/Run
 Open and run in the Blender Script Editor. A panel will appear in the 3D viewport ("N" menu on the right).
@@ -15,12 +15,15 @@ Click the Generate button and tweak the values using the box that appears on the
 - Low limit for e.g. bodies of water
 - Height-based vertex colors generation
 
+### Download
+[Take me to /terrain generator/](https://github.com/villesepp/Blender/tree/main/Terrain%20Generator)
+
 ### Screenshot
 ![alt text](https://github.com/villesepp/Blender/blob/main/readme%20images/terraingenerator.jpg "Screenshot")
 
 
 # 📁 JSON export
-Export some object properties to a JSON file. Useful if you want to use Blender as a Level Editor for your game and you are already using it for something else.
+Export some object properties to a JSON file. Useful if you want to use Blender as a Level Editor for your game and you are already using it for something else. Developed in Blender 4.3.2.
 
 ### Install/Run
 Open and run in the Blender Script Editor.
@@ -39,6 +42,9 @@ It will export everything in the current collection and the collection itself. T
 - Exports X, Y, Z coordinate (.1 precision)
 - Exports Object's Custom Properties
 - (ignores 'cycles' and 'booleans' properties that are enabled by default)
+
+### Download
+[Take me to /json export/](https://github.com/villesepp/Blender/tree/main/JSON%20export)
 
 ### Screenshot
 ![alt text](https://github.com/villesepp/Blender/blob/main/readme%20images/json.jpg "Screenshot")
