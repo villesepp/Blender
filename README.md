@@ -7,16 +7,13 @@ Simple procedural tool for making bumpy planes with options for customization.
 Open and run in the Blender Script Editor. A panel will appear in the 3D viewport ("N" menu on the right).
 
 ### Use
-Click the Generate Procedural Terrain button and tweak the values using the box that appears on the bottom right.
+Click the Generate button and tweak the values using the box that appears on the bottom right.
 
-### Features
-- Plane size
-- Subdivisions (cuts)
-- Noise Scale
-- Height Multiplier
-- Seed offset
-- Height-based bertex colors
-- Smooth shading on/off
+### Key Features
+- Size and scale
+- Two noise generators: Base and peak/valley
+- Low limit for e.g. bodies of water
+- Height-based vertex colors generation
 
 ### Screenshot
 ![alt text](https://github.com/villesepp/Blender/blob/main/readme%20images/terraingenerator.jpg "Screenshot")
@@ -38,9 +35,9 @@ It will export everything in the current collection and the collection itself. T
 - Run the script to get a file "level_01.json"
 - Read the file in your game engine and generate the level graphics using the coordinates from the JSON file
 
-### Exports
-- X, Y, Z coordinate (.1 precision)
-- Object's Custom Properties
+### Key Features
+- Exports X, Y, Z coordinate (.1 precision)
+- Exports Object's Custom Properties
 - (ignores 'cycles' and 'booleans' properties that are enabled by default)
 
 ### Screenshot
